@@ -11,10 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Synolia\SyliusSchedulerCommandPlugin\Repository\CommandRepository;
 
 /**
- * @ORM\Entity(repositoryClass="Synolia\SyliusSchedulerCommandPlugin\Repository\CommandRepository")
+ * @ORM\MappedSuperclass(repositoryClass="Synolia\SyliusSchedulerCommandPlugin\Repository\CommandRepository")
  * @ORM\Table("synolia_commands")
  */
-#[ORM\Entity(repositoryClass: CommandRepository::class)]
+#[ORM\MappedSuperclass(repositoryClass: CommandRepository::class)]
 #[ORM\Table(name: 'synolia_commands')]
 class Command implements CommandInterface
 {
@@ -28,19 +28,19 @@ class Command implements CommandInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
-    private $id;
+    protected $id;
 
     /** @ORM\Column(type="string") */
     #[ORM\Column(type: Types::STRING)]
-    private string $name = '';
+    protected string $name = '';
 
     /** @ORM\Column(type="string") */
     #[ORM\Column(type: Types::STRING)]
-    private string $command = '';
+    protected string $command = '';
 
     /** @ORM\Column(type="string", nullable=true) */
     #[ORM\Column(type: Types::STRING, nullable: true)]
-    private ?string $arguments = null;
+    protected ?string $arguments = null;
 
     /**
      * @see https://abunchofutils.com/u/computing/cron-format-helper/
@@ -48,7 +48,7 @@ class Command implements CommandInterface
      * @ORM\Column(type="string")
      */
     #[ORM\Column(type: Types::STRING)]
-    private string $cronExpression = '* * * * *';
+    protected string $cronExpression = '* * * * *';
 
     /**
      * Log's file name prefix (without path), followed by a time stamp of the execution
@@ -56,11 +56,11 @@ class Command implements CommandInterface
      * @ORM\Column(type="string", nullable=true)
      */
     #[ORM\Column(type: Types::STRING, nullable: true)]
-    private ?string $logFilePrefix = null;
+    protected ?string $logFilePrefix = null;
 
     /** @ORM\Column(type="integer") */
     #[ORM\Column(type: Types::INTEGER)]
-    private int $priority = 0;
+    protected int $priority = 0;
 
     /**
      * If true, command will be execute next time regardless cron expression
@@ -68,23 +68,23 @@ class Command implements CommandInterface
      * @ORM\Column(type="boolean")
      */
     #[ORM\Column(type: Types::BOOLEAN)]
-    private bool $executeImmediately = false;
+    protected bool $executeImmediately = false;
 
     /** @ORM\Column(type="boolean") */
     #[ORM\Column(type: Types::BOOLEAN)]
-    private bool $enabled = true;
+    protected bool $enabled = true;
 
     /** @ORM\Column(type="integer", nullable=true) */
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
-    private ?int $timeout = null;
+    protected ?int $timeout = null;
 
     /** @ORM\Column(type="integer", nullable=true) */
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
-    private ?int $idleTimeout = null;
+    protected ?int $idleTimeout = null;
 
     /** @ORM\OneToMany(targetEntity="Synolia\SyliusSchedulerCommandPlugin\Entity\ScheduledCommandInterface", mappedBy="owner") */
     #[ORM\OneToMany(targetEntity: ScheduledCommandInterface::class, mappedBy: 'owner')]
-    private Collection $scheduledCommands;
+    protected Collection $scheduledCommands;
 
     public function __construct()
     {
